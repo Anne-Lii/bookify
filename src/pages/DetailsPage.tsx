@@ -1,17 +1,29 @@
-
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { getBookDetails } from "../services/googleBooksApi";
 
 const DetailsPage = () => {
+
+  const { id } = useParams();
+  const [book, setBook] = useState<any>(null);
+
+  useEffect(() => {
+      const fetchBook = async () => {
+          if (!id) return;
+          const data = await getBookDetails(id);
+          setBook(data);
+      };
+      fetchBook();
+  }, [id]);
+
+  if (!book) return <p>Laddar bokinformation...</p>;
+
   return (
     <>
-      <h1>Details</h1>
-      <p>
-        This is the page that shows all the details of a book. 
-        The title, a picture if there is one, the author and maby a description if there is one. 
-        Maby the rating if it has one. And also reviews. 
-        There will also be a button to add your own review of this book.
-         
-        
-      </p>
+      <h1>{book.volumeInfo.title}</h1>
+      <p>Författare: {book.volumeInfo.authors?.join(", ")}</p>
+            <img src={book.volumeInfo.imageLinks?.thumbnail} alt={book.volumeInfo.title} />
+            <p>{book.volumeInfo.description}</p>
     </>
   )
 }
