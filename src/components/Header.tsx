@@ -4,8 +4,8 @@ const Header = () => {
   return (
     <header>
         <ul>
-            <li><NavLink to="/">Startsidan</NavLink></li>
-            <li><NavLink to="/login">Logga in</NavLink></li>
+            <li><NavLink to="/">Home</NavLink></li>
+            <li><NavLink to="/login">Log in</NavLink></li>
         </ul>
     </header>
   )
