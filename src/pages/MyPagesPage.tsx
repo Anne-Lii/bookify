@@ -1,3 +1,5 @@
+import './MyPagesPage.css'
+
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
 import axios from "axios";
@@ -37,7 +39,7 @@ const MyPagesPage = () => {
         if (response.status === 200) {
           setReviews(response.data);
           
-          // Hämta bokinformation för varje recension
+          //get book information for every review
           const bookData: { [key: string]: BookDetails } = {};
           await Promise.all(
             response.data.map(async (review: Review) => {
@@ -64,6 +66,23 @@ const MyPagesPage = () => {
     fetchUserReviews();
   }, [auth?.isLoggedIn]);
 
+  //function to delete a review from my pages
+  const deleteReview = async (reviewId: string) => {
+    if (!auth?.isLoggedIn) return;
+
+    try {
+      const token = localStorage.getItem("token");
+      await axios.delete(`https://bookify-api-nk6g.onrender.com/reviews/${reviewId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      // Filtrera bort den raderade recensionen från state
+      setReviews((prevReviews) => prevReviews.filter((review) => review._id !== reviewId));
+    } catch (err) {
+      console.error("Error deleting review:", err);
+    }
+  };
+
   if (!auth?.isLoggedIn) {
     return <p>You need to be logged in to see this page.</p>;
   }
@@ -73,7 +92,7 @@ const MyPagesPage = () => {
   if (reviews.length === 0) return <p>You haven't written any reviews yet.</p>;
 
   return (
-    <div>
+    <div className='container-myReviews'>
       <h1>My Reviews</h1>
       <ul>
         {reviews.map((review) => (
@@ -86,6 +105,9 @@ const MyPagesPage = () => {
             <p><strong>Your review:</strong> {review.reviewText}</p>
             <p><strong>Rating:</strong> {review.rating} ⭐</p>
             <p className="review-date">Posted on: {new Date(review.createdAt).toLocaleDateString()}</p>
+            <button className="delete-button" onClick={() => deleteReview(review._id)}>
+              Delete
+            </button>
           </li>
         ))}
       </ul>

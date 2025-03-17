@@ -1,0 +1,16 @@
+.container-myReviews {
+    width: 98%;
+    max-width: 500px;
+    margin: auto;
+}
+
+.container-myReviews li {
+    border-bottom: 1px solid grey;
+}
+
+.container-myReviews, .delete-button {
+    width: 100%;
+    min-width: 100px;
+
+}
+

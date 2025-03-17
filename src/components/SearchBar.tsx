@@ -1,3 +1,4 @@
+import './SearchBar.css'
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -13,7 +14,7 @@ const SearchBar = () => {
     };
 
     return (
-        <form onSubmit={handleSearch}>
+        <form onSubmit={handleSearch} className='searchform'>
             <input
                 type="text"
                 value={query}
