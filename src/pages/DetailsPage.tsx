@@ -26,6 +26,7 @@ interface Review {
   createdAt: string;
 }
 
+
 //function to remove HTML-tags and decode HTML-entitys in description text to make it nicer
 const cleanText = (html: string) => {
   let text = html.replace(/<br\s*\/?>/g, "\n"); //replace <br> text with actuall <br>
@@ -34,6 +35,11 @@ const cleanText = (html: string) => {
   text = doc.body.textContent || "";
   text = text.replace(/\n{2,}/g, "\n\n"); //Keep sections
   return text.trim();
+};
+
+// 🛠️ Valideringsfunktion för recensioner
+const isValidReview = (text: string) => {
+  return /[a-zA-Z]{3,}/.test(text.trim()); //min 3 char
 };
 
 const DetailsPage = () => {
@@ -50,11 +56,16 @@ const DetailsPage = () => {
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [reviewText, setReviewText] = useState("");
   const [rating, setRating] = useState(5);
+  const [isReviewValid, setIsReviewValid] = useState(false);
 
   useEffect(() => {
     fetchBook();
     fetchReviews();
   }, [id]);
+
+  useEffect(() => {
+    setIsReviewValid(isValidReview(reviewText));//update valid-status everytime reviewText changes
+  }, [reviewText]);
 
   const fetchBook = async () => {
     if (!id) return;
@@ -98,6 +109,11 @@ const DetailsPage = () => {
     e.preventDefault();
     if (!auth?.isLoggedIn) return;
   
+    if (!isReviewValid) { 
+      console.error("Review is invalid! It must contain at least 3 letters.");
+      return;
+    }
+  
     try {
       const token = localStorage.getItem("token");
       const response = await axios.post(
@@ -113,18 +129,16 @@ const DetailsPage = () => {
       );
   
       if (response.status === 201) {
-        setReviewText(""); 
+        setReviewText("");
         setRating(5);
         setShowReviewForm(false);
-  
-        // Hämta om alla recensioner från API:et för att få med `username`
-        fetchReviews();
+        fetchReviews(); // Hämta nya recensioner efter inlämning
       }
     } catch (err) {
       console.error("Error submitting review:", err);
-      
     }
   };
+  
 
   const deleteReview = async (reviewId: string) => {
     if (!auth?.isLoggedIn) return;
@@ -181,6 +195,11 @@ const DetailsPage = () => {
                 onChange={(e) => setReviewText(e.target.value)}
                 required
               />
+              {!isReviewValid && (
+                <p style={{ color: "white", fontSize: "14px" }}>
+                  Review must contain at least 3 letters and not just numbers or spaces.
+                </p>
+              )}
 
               <label>Rating:</label>
 
@@ -199,7 +218,8 @@ const DetailsPage = () => {
                 ))}
               </div>
 
-              <button type="submit">Submit Review</button>
+              <button type="submit" disabled={!isReviewValid}>Submit Review</button>
+
 
             </form>
           )}
