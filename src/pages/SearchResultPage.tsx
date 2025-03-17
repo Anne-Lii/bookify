@@ -1,6 +1,6 @@
 import './SearchResultPage.css'
 import { useState, useEffect } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { searchBooks } from "../services/googleBooksApi";
 
 interface Book {
@@ -19,6 +19,7 @@ const SearchResultPage = () => {
 
   const [searchParams] = useSearchParams();
   const query = searchParams.get("q");
+  const navigate = useNavigate();
   const [results, setResults] = useState<Book[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -46,6 +47,11 @@ const SearchResultPage = () => {
   return (
     <>
       <h1>Search result for: {query}</h1>
+
+      {/* Back to Home Button */}
+      <button className="back-button" onClick={() => navigate("/")}>
+        Go back
+      </button>
 
       {loading && <p>Loading...</p>}
       {error && <p style={{ color: "red" }}>{error}</p>}

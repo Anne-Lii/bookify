@@ -41,7 +41,7 @@ const LoginPage = () => {
     <div className="login-container">
       <h2>Log in</h2>
 
-      {/* Loading message with better visibility */}
+      {/* Loading message */}
       {loading && <p className="loading-text">Loading...</p>}
 
       {/* Error message */}
