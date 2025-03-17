@@ -74,15 +74,17 @@
     border-radius: 4px;
     color: black;
   }
+
+  .review-container {
+    padding-top: 50px;
+  }
   
   .reviews-list {
     list-style: none;
     padding: 0;
-    
   }
   
   .review-item {
-    
     padding: 10px;
     border-radius: 5px;
     margin-bottom: 10px;

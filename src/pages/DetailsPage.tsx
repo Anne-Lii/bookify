@@ -20,7 +20,7 @@ interface Book {
 
 interface Review {
   _id: string;
-  user: string;
+  userId: { username: string };
   reviewText: string;
   rating: number;
   createdAt: string;
@@ -52,51 +52,54 @@ const DetailsPage = () => {
   const [rating, setRating] = useState(5);
 
   useEffect(() => {
-    const fetchBook = async () => {
-      if (!id) return;
-      try {
-        setLoading(true);
-        setError(null);
-        const data = await getBookDetails(id);
-        setBook(data);
-      } catch (err) {
-        setError("Could not get book information");
-        console.error("Error fetching book details:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    const fetchReviews = async () => {
-      if (!id) {
-        console.error("Book ID is missing!");
-        return;
-      }
-    
-      try {
-        console.log("Fetching reviews for bookId:", id); //DEBUG!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    
-        const response = await axios.get(`https://bookify-api-nk6g.onrender.com/reviews/book/${id}`);
-    
-        if (response.status === 200) {
-          setReviews(response.data);
-        } else {
-          console.error("Unexpected response status:", response.status);
-        }
-      } catch (err) {
-        console.error("Error fetching reviews:", err);
-      }
-    };
-
     fetchBook();
     fetchReviews();
   }, [id]);
+
+  const fetchBook = async () => {
+    if (!id) return;
+    try {
+      setLoading(true);
+      setError(null);
+      const data = await getBookDetails(id);
+      setBook(data);
+    } catch (err) {
+      setError("Could not get book information");
+      console.error("Error fetching book details:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchReviews = async () => {
+    if (!id) {
+      console.error("Book ID is missing!");
+      return;
+    }
+
+    try {
+     
+      const response = await axios.get(`https://bookify-api-nk6g.onrender.com/reviews/book/${id}`);
+  
+      if (response.status === 200) {
+        console.log("Fetched reviews:", response.data); //DEBUG!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        setReviews(response.data);
+      } 
+
+    } catch (err:any) {
+       if (err.response?.status === 404) {          
+        setReviews([]); //set empty list
+  } else {
+    console.error("Error fetching reviews:", err);
+  }
+    }
+  };
 
 
   const handleReviewSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!auth?.isLoggedIn) return;
-
+  
     try {
       const token = localStorage.getItem("token");
       const response = await axios.post(
@@ -110,17 +113,20 @@ const DetailsPage = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-
+  
       if (response.status === 201) {
-        setReviews([...reviews, response.data]); // Update UI with the new review
-        setReviewText(""); // Clear input fields
+        setReviewText(""); 
         setRating(5);
         setShowReviewForm(false);
+  
+        // Hämta om alla recensioner från API:et för att få med `username`
+        fetchReviews();
       }
     } catch (err) {
       console.error("Error submitting review:", err);
     }
   };
+  
 
 
 
@@ -185,20 +191,22 @@ const DetailsPage = () => {
       )}
 
       {/* Display reviews */}
+      <div className="review-container">
       <h2>Reviews</h2>
       {reviews.length === 0 ? (
-        <p>No reviews yet. Be the first to review!</p>
+        <p>No reviews yet. Be the first to review! (You need to be logged in to leave a review)</p>
       ) : (
         <ul className="reviews-list">
-          {reviews.map((review) => (
-            <li key={review._id} className="review-item">
-              <p><strong>{review.user}</strong>{review.rating} ⭐</p>
+          {reviews.map((review, index) => (
+            <li key={review._id || index} className="review-item">
+              <p><strong>{review.userId?.username || "Unknown User"}</strong> - {review.rating} ⭐</p>
               <p>{review.reviewText}</p>
               <p className="review-date">Posted on: {new Date(review.createdAt).toLocaleDateString()}</p>
             </li>
           ))}
         </ul>
       )}
+      </div>
     </div>
   );
 }
