@@ -1,11 +1,13 @@
 import './LoginPage.css';
 
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { AuthContext } from '../context/AuthContext';
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const auth = useContext(AuthContext); // Get AuthContext
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -23,7 +25,9 @@ const LoginPage = () => {
       });
 
       if (response.status === 200) {
-        localStorage.setItem("token", response.data.token);
+        const token = response.data.token;
+        localStorage.setItem("token", token);
+        auth?.login(token); //Update AuthContext state
         navigate("/");
       }
     } catch (err: any) {
@@ -34,27 +38,45 @@ const LoginPage = () => {
   };
 
   return (
-    <div>
+    <div className="login-container">
       <h2>Log in</h2>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+
+      {/* Loading message with better visibility */}
+      {loading && <p className="loading-text">Loading...</p>}
+
+      {/* Error message */}
+      {error && <p className="error-text">{error}</p>}
+
       <form onSubmit={handleLogin}>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <button type="submit" disabled={loading}>
-          {loading ? "Logging in..." : "Log in"}
-        </button>
+        <div className="form-group">
+          <label htmlFor="email">Email:</label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            placeholder="Enter your email"
+            autoComplete="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="password">Password:</label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            placeholder="Enter your password"
+            autoComplete="current-password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
+
+        <button type="submit" disabled={loading}>Log in</button>
       </form>
     </div>
   );

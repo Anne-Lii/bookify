@@ -6,6 +6,8 @@ import Layout from './components/Layout';
 import DetailsPage from './pages/DetailsPage';
 import SearchResultPage from './pages/SearchResultPage';
 import RegisterPage from './pages/RegisterPage';
+import MyPagesPage from './pages/MypagesPage';
+
 
 const router = createBrowserRouter([
     {
@@ -17,7 +19,8 @@ const router = createBrowserRouter([
             {path: '/login', element: <LoginPage/>},
             {path: '/register', element: <RegisterPage/>}, 
             {path: '/search', element: <SearchResultPage/>}, 
-            {path: '/book/:id', element: <DetailsPage/>}//to show details on a book
+            {path: '/book/:id', element: <DetailsPage/>},//to show details on a book
+            { path: '/my-pages', element: <MyPagesPage /> }
            
 
         ]
