@@ -17,7 +17,8 @@ const router = createBrowserRouter([
             {path: '/login', element: <LoginPage/>},
             {path: '/register', element: <RegisterPage/>}, 
             {path: '/search', element: <SearchResultPage/>}, 
-            {path: '/details', element: <DetailsPage/>} 
+            {path: '/book/:id', element: <DetailsPage/>}//to show details on a book
+           
 
         ]
     }
