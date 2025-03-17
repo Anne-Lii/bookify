@@ -8,9 +8,11 @@
     border-bottom: 1px solid grey;
 }
 
-.container-myReviews, .delete-button {
+.container-myReviews .delete-button, .edit-button {
     width: 100%;
     min-width: 100px;
-
+    max-width: 100px;
+    margin: 0 10px;
+    background-color: rgb(175, 96, 96);
 }
 
