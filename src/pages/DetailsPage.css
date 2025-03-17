@@ -93,7 +93,8 @@
   
   .review-date {
     font-size: 0.8rem;
-    color: gray;
+    color: rgb(189, 189, 189);
+    padding: 5px 0;
   }
   
   .rating-container {
@@ -113,5 +114,9 @@
     accent-color: #007bff;
     cursor: pointer;
   }
-  
+  .delete-button {
+    background-color: rgb(214, 118, 139);
+    max-width: 40px;
+    margin-top: 10px;
+  }
   

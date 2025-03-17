@@ -82,7 +82,6 @@ const DetailsPage = () => {
       const response = await axios.get(`https://bookify-api-nk6g.onrender.com/reviews/book/${id}`);
   
       if (response.status === 200) {
-        console.log("Fetched reviews:", response.data); //DEBUG!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         setReviews(response.data);
       } 
 
@@ -94,7 +93,6 @@ const DetailsPage = () => {
   }
     }
   };
-
 
   const handleReviewSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -124,8 +122,26 @@ const DetailsPage = () => {
       }
     } catch (err) {
       console.error("Error submitting review:", err);
+      
     }
   };
+
+  const deleteReview = async (reviewId: string) => {
+    if (!auth?.isLoggedIn) return;
+  
+    try {
+      const token = localStorage.getItem("token");
+      await axios.delete(`https://bookify-api-nk6g.onrender.com/reviews/${reviewId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+  
+      // Hämta recensionerna igen för att uppdatera listan
+      fetchReviews();
+    } catch (err) {
+      console.error("Error deleting review:", err);
+    }
+  };
+  
   
 
 
@@ -202,8 +218,16 @@ const DetailsPage = () => {
               <p><strong>{review.userId?.username || "Unknown User"}</strong> - {review.rating} ⭐</p>
               <p>{review.reviewText}</p>
               <p className="review-date">Posted on: {new Date(review.createdAt).toLocaleDateString()}</p>
+
+              {/* Visa delete-knappen endast för användarens egna recensioner */}
+              {auth?.user?.username === review.userId?.username && (
+                <button className="delete-button" onClick={() => deleteReview(review._id)}>
+                X 
+                </button>
+              )}
             </li>
           ))}
+
         </ul>
       )}
       </div>

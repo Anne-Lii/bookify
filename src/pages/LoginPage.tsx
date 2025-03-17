@@ -25,9 +25,10 @@ const LoginPage = () => {
       });
 
       if (response.status === 200) {
-        const token = response.data.token;
+        const token = response.data.token;//get token from response
+        const user = response.data.user;//get user from response
         localStorage.setItem("token", token);
-        auth?.login(token); //Update AuthContext state
+        auth?.login(token, user);//send token and user to AuthContext
         navigate("/");
       }
     } catch (err: any) {
