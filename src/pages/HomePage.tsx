@@ -1,5 +1,4 @@
 import SearchBar from '../components/SearchBar';
-import './HomePage.css';
 
 const HomePage: React.FC = () => {
   return (
