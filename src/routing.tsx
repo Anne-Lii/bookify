@@ -6,7 +6,7 @@ import Layout from './components/Layout';
 import DetailsPage from './pages/DetailsPage';
 import SearchResultPage from './pages/SearchResultPage';
 import RegisterPage from './pages/RegisterPage';
-import MyPagesPage from './pages/MypagesPage';
+import MyPagesPage from './pages/MyPagesPage';
 
 
 const router = createBrowserRouter([
