@@ -1,54 +1,75 @@
-# React + TypeScript + Vite
+# **Bookify**
+Anne-Lii Hansen 
+anha2324@student.miun.se
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Bookify is a React-based web application that allows users to search for books via the Google Books API, write reviews, and manage their own book reviews. The frontend is built with TypeScript and communicates with a backend API developed with Hapi.js and the data is stored in a MongoDb database.
 
-Currently, two official plugins are available:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## **FRONTEND**
 
-## Expanding the ESLint configuration
+### **Features**
+* Search for books using the Google Books API  
+* View detailed book information  
+* Register and log in with JWT authentication  
+* Write book reviews  
+* Rate a book
+* Edit and delete your own reviews  
+* View a list of all reviews written by logged in user
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### **Technologies Used**
+#### **Frontend**
+- **React** with TypeScript  
+- **React Router** for navigation  
+- **Axios** for API requests  
+- **Context API** for state management  
+- **CSS Modules** for styling  
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+#### **Backend**
+- **Hapi.js** (Node.js framework)  
+- **MongoDB** (Database)  
+- **JWT authentication** for user login  
+- **Google Books API** integration  
+
+###  **Installation & Setup**
+This project is version-controlled using Git. Repository is public on GitHub:
+https://github.com/Anne-Lii/bookify.git 
+
+#### **1. Clone the project**
+```sh
+git clone https://github.com/Anne-Lii/bookify.git
+cd bookify
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+#### **2. Install dependencies**
+```sh
+npm install
 ```
+
+#### **3. Start server**
+```sh
+npm run dev
+```
+
+
+## **BACKEND**
+
+The frontend communicates with a backend API built with Hapi.js.
+It is hosted on Render:
+```sh
+https://bookify-api-nk6g.onrender.com 
+```
+
+### **API endpoints**
+
+POST	  /register:	            Create a new account
+POST	  /login:	                Login and get a JWT
+GET	    /reviews/book/:bookId:	Get reviews for a book
+POST	  /reviews:	              Write a review (authentication is needed)
+PUT	    /reviews/:reviewId:	    Update a review (authentication is needed)
+DELETE	/reviews/:reviewId:	    Delete a review (authentication is needed)
+GET	    /reviews/user:	        Get all the logged in users reviews
+
+### Error Handling
+* Form validation ensures that users enter valid data when registering and submitting reviews.
+* API error handling provides clear messages if a request fails.
+* JWT authentication errors return proper feedback if login fails.
