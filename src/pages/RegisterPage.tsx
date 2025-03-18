@@ -13,7 +13,7 @@ const RegisterPage = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  //states för errormessage
+  //states for errormessage
   const [usernameError, setUsernameError] = useState<string | null>(null);
   const [emailError, setEmailError] = useState<string | null>(null);
   const [passwordError, setPasswordError] = useState<string | null>(null);
