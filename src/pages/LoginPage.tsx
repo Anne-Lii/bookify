@@ -40,7 +40,7 @@ const LoginPage = () => {
 
   return (
     <div className="login-container">
-      <h2>Log in</h2>
+      <h1>Log in</h1>
 
       {/* Loading message */}
       {loading && <p className="loading-text">Loading...</p>}

@@ -54,7 +54,7 @@ const SearchResultPage = () => {
       </button>
 
       {loading && <p>Loading...</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && <p>{error}</p>}
 
       {!loading && !error && results.length === 0 && <p>No books were found.</p>}
 

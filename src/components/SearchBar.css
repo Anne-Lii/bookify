@@ -25,3 +25,9 @@
 .searchform button:hover {
     box-shadow: none;
 }
+
+.error-message {
+    color: white;
+    font-size: 14px;
+    margin-top: 5px;
+}

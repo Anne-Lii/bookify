@@ -62,7 +62,7 @@ const MyPagesPage = () => {
           setBooks(bookData);
         }
       } catch (err) {
-        setError("Could not fetch your reviews.");
+        setError("You have no reviews yet.");
       } finally {
         setLoading(false);
       }
@@ -135,7 +135,7 @@ const MyPagesPage = () => {
   }
 
   if (loading) return <p>Loading your reviews...</p>;
-  if (error) return <p style={{ color: "red" }}>{error}</p>;
+  if (error) return <p>{error}</p>;
   if (reviews.length === 0) return <p>You haven't written any reviews yet.</p>;
 
   return (

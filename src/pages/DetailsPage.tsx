@@ -131,7 +131,7 @@ const DetailsPage = () => {
   };
 
   if (loading) return <p>Loading book information...</p>;
-  if (error) return <p style={{ color: "red" }}>{error}</p>;
+  if (error) return <p>{error}</p>;
   if (!book) return <p>No book was found.</p>;
 
   return (
@@ -170,7 +170,7 @@ const DetailsPage = () => {
                 required
               />
               {!isReviewValid && (
-                <p style={{ color: "white", fontSize: "14px" }}>
+                <p>
                   Review must contain at least 3 letters and not just numbers or spaces.
                 </p>
               )}
@@ -209,9 +209,10 @@ const DetailsPage = () => {
           <ul className="reviews-list">
             {reviews.map((review, index) => (
               <li key={review._id || index} className="review-item">
-                <p><strong>{review.userId?.username || "Unknown User"}</strong>  {review.rating} ⭐</p>
+                <p><strong>{review.userId?.username || "Unknown User"}</strong></p>
+                <p>  {review.rating} ⭐</p>
                 <p>{review.reviewText}</p>
-                <p className="review-date">Posted on: {new Date(review.createdAt).toLocaleDateString()}</p>
+                <p className="review-date">Posted on: {new Date(review.createdAt).toLocaleDateString()} </p>
 
                 {/* delete button only shows on users own reviews */}
                 {auth?.user?.username === review.userId?.username && (
