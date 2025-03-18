@@ -7,11 +7,11 @@ import { fetchReviews, submitReview, deleteReview } from "../services/reviewServ
 
 interface Book {
   volumeInfo: {
-    title: string;
-    authors?: string[];
-    description?: string;
+    title: string;//titel
+    authors?: string[];//array with authors
+    description?: string;//description of the book
     imageLinks?: {
-      thumbnail?: string;
+      thumbnail?: string;//url picture
     };
     publishedDate?: string;
     pageCount?: number;
@@ -84,7 +84,7 @@ const DetailsPage = () => {
 
   const fetchReviewsForBook = async () => {
     if (!id) return;
-  
+
     try {
       const reviewsData = await fetchReviews(id); // Använd `fetchReviews` från `reviewService.ts`
       setReviews(reviewsData);
@@ -92,21 +92,21 @@ const DetailsPage = () => {
       console.error("Failed to fetch reviews:", error);
     }
   };
-  
+
 
   const handleReviewSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!auth?.isLoggedIn) return;
-  
-    if (!isReviewValid) { 
+
+    if (!isReviewValid) {
       console.error("Review is invalid! It must contain at least 3 letters.");
       return;
     }
-  
+
     try {
       const token = localStorage.getItem("token");
       const success = await submitReview(id!, reviewText, rating, token!);
-  
+
       if (success) {
         setReviewText(""); //resets review input field
         setRating(5); //resets rating to default value
@@ -117,12 +117,10 @@ const DetailsPage = () => {
       console.error("Error submitting review:", err);
     }
   };
-  
-  
 
   const handleDeleteReview = async (reviewId: string) => {
     if (!auth?.isLoggedIn) return;
-  
+
     try {
       const token = localStorage.getItem("token");
       await deleteReview(reviewId, token!);
@@ -131,7 +129,7 @@ const DetailsPage = () => {
       console.error("Error deleting review:", err);
     }
   };
-  
+
   if (loading) return <p>Loading book information...</p>;
   if (error) return <p style={{ color: "red" }}>{error}</p>;
   if (!book) return <p>No book was found.</p>;
@@ -143,6 +141,8 @@ const DetailsPage = () => {
       <h1>{book.volumeInfo.title}</h1>
 
       <p><strong>Author:</strong> {book.volumeInfo.authors?.join(", ") || "Unknown"}</p>
+      <p><strong>Published Date:</strong> {book.volumeInfo.publishedDate || "Unknown"}</p>
+      <p><strong>Page Count:</strong> {book.volumeInfo.pageCount ? `${book.volumeInfo.pageCount} pages` : "N/A"}</p>
 
       {book.volumeInfo.imageLinks?.thumbnail && (
         <img src={book.volumeInfo.imageLinks.thumbnail} alt={book.volumeInfo.title} className="book-image" />
@@ -151,6 +151,8 @@ const DetailsPage = () => {
       <p className="book-description">
         {book.volumeInfo.description ? cleanText(book.volumeInfo.description) : "No description available."}
       </p>
+
+      {/* REVIEWS */}
 
       {/* Only show the 'write a review' button if the user is logged in */}
       {auth?.isLoggedIn && (
@@ -200,28 +202,28 @@ const DetailsPage = () => {
 
       {/* Display reviews */}
       <div className="review-container">
-      <h2>Reviews</h2>
-      {reviews.length === 0 ? (
-        <p>No reviews yet. Be the first to review! (You need to be logged in to leave a review)</p>
-      ) : (
-        <ul className="reviews-list">
-          {reviews.map((review, index) => (
-            <li key={review._id || index} className="review-item">
-              <p><strong>{review.userId?.username || "Unknown User"}</strong>  {review.rating} ⭐</p>
-              <p>{review.reviewText}</p>
-              <p className="review-date">Posted on: {new Date(review.createdAt).toLocaleDateString()}</p>
+        <h2>Reviews</h2>
+        {reviews.length === 0 ? (
+          <p>No reviews yet. Be the first to review! (You need to be logged in to leave a review)</p>
+        ) : (
+          <ul className="reviews-list">
+            {reviews.map((review, index) => (
+              <li key={review._id || index} className="review-item">
+                <p><strong>{review.userId?.username || "Unknown User"}</strong>  {review.rating} ⭐</p>
+                <p>{review.reviewText}</p>
+                <p className="review-date">Posted on: {new Date(review.createdAt).toLocaleDateString()}</p>
 
-              {/* delete button only shows on users own reviews */}
-              {auth?.user?.username === review.userId?.username && (
-                <button className="delete-button" onClick={() => handleDeleteReview(review._id)}>
-                X 
-                </button>
-              )}
-            </li>
-          ))}
+                {/* delete button only shows on users own reviews */}
+                {auth?.user?.username === review.userId?.username && (
+                  <button className="delete-button" onClick={() => handleDeleteReview(review._id)}>
+                    X
+                  </button>
+                )}
+              </li>
+            ))}
 
-        </ul>
-      )}
+          </ul>
+        )}
       </div>
     </div>
   );
