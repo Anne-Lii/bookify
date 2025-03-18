@@ -3,7 +3,7 @@ import { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getBookDetails } from "../services/googleBooksApi";
 import { AuthContext } from '../context/AuthContext';
-import axios from 'axios';
+import { fetchReviews, submitReview, deleteReview } from "../services/reviewService";
 
 interface Book {
   volumeInfo: {
@@ -27,9 +27,9 @@ interface Review {
 }
 
 
-//function to remove HTML-tags and decode HTML-entitys in description text to make it nicer
+//Function to remove HTML tags and decode HTML entities in the description text for better readability.
 const cleanText = (html: string) => {
-  let text = html.replace(/<br\s*\/?>/g, "\n"); //replace <br> text with actuall <br>
+  let text = html.replace(/<br\s*\/?>/g, "\n"); //Replace <br> tags with actual line breaks
   text = text.replace(/<[^>]+>/g, ""); //remove HTML-tags
   const doc = new DOMParser().parseFromString(text, "text/html");
   text = doc.body.textContent || "";
@@ -37,7 +37,7 @@ const cleanText = (html: string) => {
   return text.trim();
 };
 
-// 🛠️ Valideringsfunktion för recensioner
+//validation for reviews
 const isValidReview = (text: string) => {
   return /[a-zA-Z]{3,}/.test(text.trim()); //min 3 char
 };
@@ -60,18 +60,18 @@ const DetailsPage = () => {
 
   useEffect(() => {
     fetchBook();
-    fetchReviews();
+    fetchReviewsForBook();
   }, [id]);
 
   useEffect(() => {
-    setIsReviewValid(isValidReview(reviewText));//update valid-status everytime reviewText changes
+    setIsReviewValid(isValidReview(reviewText));//updates the review's validity status whenever the review text changes.
   }, [reviewText]);
 
   const fetchBook = async () => {
     if (!id) return;
     try {
       setLoading(true);
-      setError(null);
+      setError(null);//Resets error state before making the request
       const data = await getBookDetails(id);
       setBook(data);
     } catch (err) {
@@ -82,28 +82,17 @@ const DetailsPage = () => {
     }
   };
 
-  const fetchReviews = async () => {
-    if (!id) {
-      console.error("Book ID is missing!");
-      return;
-    }
-
-    try {
-     
-      const response = await axios.get(`https://bookify-api-nk6g.onrender.com/reviews/book/${id}`);
+  const fetchReviewsForBook = async () => {
+    if (!id) return;
   
-      if (response.status === 200) {
-        setReviews(response.data);
-      } 
-
-    } catch (err:any) {
-       if (err.response?.status === 404) {          
-        setReviews([]); //set empty list
-  } else {
-    console.error("Error fetching reviews:", err);
-  }
+    try {
+      const reviewsData = await fetchReviews(id); // Använd `fetchReviews` från `reviewService.ts`
+      setReviews(reviewsData);
+    } catch (error) {
+      console.error("Failed to fetch reviews:", error);
     }
   };
+  
 
   const handleReviewSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -116,53 +105,36 @@ const DetailsPage = () => {
   
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.post(
-        "https://bookify-api-nk6g.onrender.com/reviews",
-        {
-          bookId: id,
-          reviewText,
-          rating,
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const success = await submitReview(id!, reviewText, rating, token!);
   
-      if (response.status === 201) {
-        setReviewText("");
-        setRating(5);
-        setShowReviewForm(false);
-        fetchReviews(); // Hämta nya recensioner efter inlämning
+      if (success) {
+        setReviewText(""); //resets review input field
+        setRating(5); //resets rating to default value
+        setShowReviewForm(false); //Hide review form after successful submit
+        fetchReviewsForBook(); //Refresh reviews
       }
     } catch (err) {
       console.error("Error submitting review:", err);
     }
   };
   
+  
 
-  const deleteReview = async (reviewId: string) => {
+  const handleDeleteReview = async (reviewId: string) => {
     if (!auth?.isLoggedIn) return;
   
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`https://bookify-api-nk6g.onrender.com/reviews/${reviewId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-  
-      // Hämta recensionerna igen för att uppdatera listan
-      fetchReviews();
+      await deleteReview(reviewId, token!);
+      fetchReviewsForBook(); // Refresh after deletion
     } catch (err) {
       console.error("Error deleting review:", err);
     }
   };
   
-  
-
-
-
   if (loading) return <p>Loading book information...</p>;
   if (error) return <p style={{ color: "red" }}>{error}</p>;
-  if (!book) return <p>No bbok was found.</p>;
+  if (!book) return <p>No book was found.</p>;
 
   return (
     <div className="details-container">
@@ -180,7 +152,7 @@ const DetailsPage = () => {
         {book.volumeInfo.description ? cleanText(book.volumeInfo.description) : "No description available."}
       </p>
 
-      {/* Only show the review button if the user is logged in */}
+      {/* Only show the 'write a review' button if the user is logged in */}
       {auth?.isLoggedIn && (
         <>
           <button className="review-button" onClick={() => setShowReviewForm(!showReviewForm)}>
@@ -235,13 +207,13 @@ const DetailsPage = () => {
         <ul className="reviews-list">
           {reviews.map((review, index) => (
             <li key={review._id || index} className="review-item">
-              <p><strong>{review.userId?.username || "Unknown User"}</strong> - {review.rating} ⭐</p>
+              <p><strong>{review.userId?.username || "Unknown User"}</strong>  {review.rating} ⭐</p>
               <p>{review.reviewText}</p>
               <p className="review-date">Posted on: {new Date(review.createdAt).toLocaleDateString()}</p>
 
-              {/* Visa delete-knappen endast för användarens egna recensioner */}
+              {/* delete button only shows on users own reviews */}
               {auth?.user?.username === review.userId?.username && (
-                <button className="delete-button" onClick={() => deleteReview(review._id)}>
+                <button className="delete-button" onClick={() => handleDeleteReview(review._id)}>
                 X 
                 </button>
               )}
