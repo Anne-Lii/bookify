@@ -62,7 +62,7 @@ const RegisterPage = () => {
   return (
     <div className='register-container'>
       <h1>Register new account</h1>
-
+      {generalError && <p className="register-error-message">{generalError}</p>}
       <form onSubmit={handleRegister} noValidate> {/* 👈 Stänger av webbläsarens inbyggda validering */}
         
         {/* USERNAME */}
