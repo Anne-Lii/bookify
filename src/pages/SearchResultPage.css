@@ -1,3 +1,9 @@
+.searchresult-main {
+    width: 100%;
+    max-width: 500px;
+    margin: auto;
+}
+
 .searchResults {
     list-style: none;
     padding: 0 0 150px 0;

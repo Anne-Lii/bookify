@@ -1,0 +1,21 @@
+.register-container {
+    width: 95%;
+    max-width: 400px;
+    margin: auto;
+}
+
+.register-container label {
+    display: block;
+    text-align: left;
+    margin-top: 10px;
+}
+
+.register-container input {
+    padding: 6px 0 6px 1px;
+    margin: 3px 0;
+}
+
+.register-container button {
+    margin-top: 5px;
+    padding-left: 1px;
+}

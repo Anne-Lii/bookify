@@ -1,3 +1,5 @@
+import './RegisterPage.css'
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -58,25 +60,33 @@ const RegisterPage = () => {
 
 
   return (
-    <div>
-      <h2>Registrera dig</h2>
+    <div className='register-container'>
+      <h1>Register new account</h1>
       {error && <p style={{ color: "red" }}>{error}</p>}
       <form onSubmit={handleRegister}>
+        <label htmlFor="username">Username:</label>
         <input
+          id="username"
           type="text"
           placeholder="Username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           required
         />
+
+        <label htmlFor="email">Email:</label>
         <input
+          id="email"
           type="email"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
         />
+
+        <label htmlFor="password">Password:</label>
         <input
+          id="password"
           type="password"
           placeholder="Password"
           value={password}

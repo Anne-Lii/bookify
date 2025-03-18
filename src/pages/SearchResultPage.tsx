@@ -45,7 +45,7 @@ const SearchResultPage = () => {
   }, [query]);
   
   return (
-    <>
+    <div className='searchresult-main'>
       <h1>Search result for: {query}</h1>
 
       {/* Back to Home Button */}
@@ -63,7 +63,7 @@ const SearchResultPage = () => {
           <li key={book.id} className="searchResultItem">
             <Link to={`/book/${book.id}`} className="searchResultLink">
               <h2>{book.volumeInfo.title}</h2>
-              <p className='bookdetails-author'>{book.volumeInfo.authors?.join(", ") || "Unknown author"}</p>
+              <p>{book.volumeInfo.authors?.join(", ") || "Unknown author"}</p>
               {book.volumeInfo.imageLinks?.thumbnail && (
                 <img src={book.volumeInfo.imageLinks.thumbnail} alt={book.volumeInfo.title} />
               )}
@@ -71,7 +71,7 @@ const SearchResultPage = () => {
           </li>
         ))}
       </ul>
-    </>
+    </div>
   );
 }
 
