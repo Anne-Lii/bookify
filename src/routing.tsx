@@ -8,7 +8,6 @@ import SearchResultPage from './pages/SearchResultPage';
 import RegisterPage from './pages/RegisterPage';
 import MyPagesPage from './pages/MyPagesPage';
 
-
 const router = createBrowserRouter([
     {
         path: "/",
@@ -20,7 +19,7 @@ const router = createBrowserRouter([
             {path: '/register', element: <RegisterPage/>}, 
             {path: '/search', element: <SearchResultPage/>}, 
             {path: '/book/:id', element: <DetailsPage/>},//to show details on a book
-            { path: '/my-pages', element: <MyPagesPage /> }
+            { path: '/my-pages', element: <MyPagesPage /> }//my page with all my reviews
            
 
         ]
