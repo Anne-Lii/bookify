@@ -18,6 +18,13 @@ const LoginPage = () => {
     setError(null);
     setLoading(true);
 
+    //Validate input
+    if (!email.trim() || !password.trim()) {
+      setError("You need to enter a valid email and password.");
+      setLoading(false);
+      return;
+    }
+
     try {
       const response = await axios.post("https://bookify-api-nk6g.onrender.com/login", {
         email,
@@ -32,7 +39,7 @@ const LoginPage = () => {
         navigate("/");
       }
     } catch (err: any) {
-      setError("Wrong email or password.");
+      setError("Unvalid email or password.");
     } finally {
       setLoading(false);
     }
@@ -40,15 +47,10 @@ const LoginPage = () => {
 
   return (
     <div className="login-container">
+
       <h1>Log in</h1>
 
-      {/* Loading message */}
-      {loading && <p className="loading-text">Loading...</p>}
-
-      {/* Error message */}
-      {error && <p className="error-text">{error}</p>}
-
-      <form onSubmit={handleLogin}>
+      <form onSubmit={handleLogin} noValidate>{/* inactivate browsers validation */}
         <div className="form-group">
           <label htmlFor="email">Email:</label>
           <input
@@ -59,7 +61,6 @@ const LoginPage = () => {
             autoComplete="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            required
           />
         </div>
 
@@ -73,9 +74,14 @@ const LoginPage = () => {
             autoComplete="current-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            required
           />
         </div>
+
+        {/* Loading message */}
+        {loading && <p className="loading-text">Loading...</p>}
+
+        {/* Error message */}
+        {error && <p className="error-text">{error}</p>}
 
         <button type="submit" disabled={loading}>Log in</button>
       </form>

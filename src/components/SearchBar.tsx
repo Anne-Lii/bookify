@@ -37,8 +37,8 @@ const SearchBar = () => {
                 />
 
                 {/* Show errormessage if exists */}
-                {errorMessage && <p className="error-message">{errorMessage}</p>}
-
+                {errorMessage && <p className="error-message" style={{ color: "white" }}>{errorMessage}</p>}
+                
                 <button type="submit">Search</button>
             </form>
 
