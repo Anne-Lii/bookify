@@ -3,10 +3,18 @@
     padding: 0 0 150px 0;
 }
 
+.searchResultLink {
+    text-decoration: none;
+}
+
 .searchResults li {
     border-bottom: 1px solid grey;
     padding: 20px;
     min-height: 200px;
+}
+
+.searchResults h2 {
+    text-decoration: underline;
 }
 
 .searchResults img {

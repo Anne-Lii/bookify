@@ -63,7 +63,7 @@ const SearchResultPage = () => {
           <li key={book.id} className="searchResultItem">
             <Link to={`/book/${book.id}`} className="searchResultLink">
               <h2>{book.volumeInfo.title}</h2>
-              <p>{book.volumeInfo.authors?.join(", ") || "Unknown author"}</p>
+              <p className='bookdetails-author'>{book.volumeInfo.authors?.join(", ") || "Unknown author"}</p>
               {book.volumeInfo.imageLinks?.thumbnail && (
                 <img src={book.volumeInfo.imageLinks.thumbnail} alt={book.volumeInfo.title} />
               )}
