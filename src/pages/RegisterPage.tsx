@@ -17,6 +17,7 @@ const RegisterPage = () => {
   const [usernameError, setUsernameError] = useState<string | null>(null);
   const [emailError, setEmailError] = useState<string | null>(null);
   const [passwordError, setPasswordError] = useState<string | null>(null);
+  const [generalError, setGeneralError] = useState<string | null>(null);
   
 
   const handleRegister = async (e: React.FormEvent) => {
@@ -24,6 +25,7 @@ const RegisterPage = () => {
     setUsernameError(null);
     setEmailError(null);
     setPasswordError(null);
+    setGeneralError(null);
     setLoading(true);
 
     let isValid = true;
@@ -51,7 +53,7 @@ const RegisterPage = () => {
       const success = await registerUser(username, email, password);
       if (success) navigate("/login");
   } catch (err) {
-      setError("Registration failed. Try again.");
+    setGeneralError("Registration failed. Try again."); 
   } finally {
       setLoading(false);
   }
@@ -106,7 +108,4 @@ const RegisterPage = () => {
 }
 
 export default RegisterPage
-function setError(arg0: string) {
-  throw new Error('Function not implemented.');
-}
 
