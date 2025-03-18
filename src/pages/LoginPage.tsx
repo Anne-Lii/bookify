@@ -2,8 +2,8 @@ import './LoginPage.css';
 
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { AuthContext } from '../context/AuthContext';
+import { loginUser } from '../services/apiService';
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -26,20 +26,12 @@ const LoginPage = () => {
     }
 
     try {
-      const response = await axios.post("https://bookify-api-nk6g.onrender.com/login", {
-        email,
-        password,
-      });
-
-      if (response.status === 200) {
-        const token = response.data.token;//get token from response
-        const user = response.data.user;//get user from response
-        localStorage.setItem("token", token);
-        auth?.login(token, user);//send token and user to AuthContext
-        navigate("/");
-      }
+      const data = await loginUser(email, password);
+      localStorage.setItem("token", data.token);
+      auth?.login(data.token, data.user);
+      navigate("/");
     } catch (err: any) {
-      setError("Unvalid email or password.");
+      setError(err.message);
     } finally {
       setLoading(false);
     }

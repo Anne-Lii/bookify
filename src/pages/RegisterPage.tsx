@@ -2,7 +2,7 @@ import './RegisterPage.css'
 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { registerUser } from '../services/apiService';
 
 
 const RegisterPage = () => {
@@ -48,24 +48,13 @@ const RegisterPage = () => {
     }
 
     try {
-      const response = await axios.post("https://bookify-api-nk6g.onrender.com/register", {
-        username,
-        email,
-        password,
-      });
-
-      if (response.status === 201) {
-        navigate("/login"); //send user to loginpage after successful registration
-      }
-    } catch (err: any) {
-      if (err.response && err.response.data && err.response.data.message) {
-        setUsernameError(err.response.data.message);//if backend sends errormessage
-      } else {
-        setUsernameError("Registration failed, try again.");
-      }
-    } finally {
+      const success = await registerUser(username, email, password);
+      if (success) navigate("/login");
+  } catch (err) {
+      setError("Registration failed. Try again.");
+  } finally {
       setLoading(false);
-    }
+  }
   };
 
   return (
@@ -117,3 +106,7 @@ const RegisterPage = () => {
 }
 
 export default RegisterPage
+function setError(arg0: string) {
+  throw new Error('Function not implemented.');
+}
+

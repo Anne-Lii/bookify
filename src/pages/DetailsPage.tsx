@@ -3,7 +3,7 @@ import { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getBookDetails } from "../services/googleBooksApi";
 import { AuthContext } from '../context/AuthContext';
-import { fetchReviews, submitReview, deleteReview } from "../services/reviewService";
+import { fetchReviews, submitReview, deleteReview } from "../services/apiService";
 
 interface Book {
   volumeInfo: {

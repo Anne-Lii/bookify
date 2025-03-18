@@ -1,9 +1,8 @@
-import './MyPagesPage.css'
-
+import './MyPagesPage.css';
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
-import axios from "axios";
 import { getBookDetails } from "../services/googleBooksApi";
+import { fetchUserReviews, deleteUserReview, updateUserReview } from "../services/apiService";
 
 interface Review {
   _id: string;
@@ -20,13 +19,14 @@ interface BookDetails {
 }
 
 const MyPagesPage = () => {
+  //states
   const auth = useContext(AuthContext);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [books, setBooks] = useState<{ [key: string]: BookDetails }>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  //states for inline-editing
+  //States for inline-editing
   const [editingReviewId, setEditingReviewId] = useState<string | null>(null);
   const [editedReviewText, setEditedReviewText] = useState("");
   const [originalReviewText, setOriginalReviewText] = useState("");
@@ -34,33 +34,34 @@ const MyPagesPage = () => {
   useEffect(() => {
     if (!auth?.isLoggedIn) return;
 
-    const fetchUserReviews = async () => {
+    const fetchReviewsAndBooks = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get("https://bookify-api-nk6g.onrender.com/reviews/user", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        if (response.status === 200) {
-          setReviews(response.data);
-          
-          //get book information for every review
-          const bookData: { [key: string]: BookDetails } = {};
-          await Promise.all(
-            response.data.map(async (review: Review) => {
-              if (!bookData[review.bookId]) { 
-                const bookInfo = await getBookDetails(review.bookId);
-                bookData[review.bookId] = {
-                  title: bookInfo.volumeInfo.title,
-                  authors: bookInfo.volumeInfo.authors,
-                  image: bookInfo.volumeInfo.imageLinks?.thumbnail,
-                };
-              }
-            })
-          );
-
-          setBooks(bookData);
+        if (!token) {
+          setError("Unauthorized");
+          return;
         }
+
+        //get users reviews
+        const userReviews = await fetchUserReviews(token);
+        setReviews(userReviews);
+
+        //get book information for every review
+        const bookData: { [key: string]: BookDetails } = {};
+        await Promise.all(
+          userReviews.map(async (review: Review) => {
+            if (!bookData[review.bookId]) {
+              const bookInfo = await getBookDetails(review.bookId);
+              bookData[review.bookId] = {
+                title: bookInfo.volumeInfo.title,
+                authors: bookInfo.volumeInfo.authors,
+                image: bookInfo.volumeInfo.imageLinks?.thumbnail,
+              };
+            }
+          })
+        );
+
+        setBooks(bookData);
       } catch (err) {
         setError("You have no reviews yet.");
       } finally {
@@ -68,67 +69,58 @@ const MyPagesPage = () => {
       }
     };
 
-    fetchUserReviews();
+    fetchReviewsAndBooks();
   }, [auth?.isLoggedIn]);
 
-  //function to delete a review from my pages
+  //delete a review
   const deleteReview = async (reviewId: string) => {
     if (!auth?.isLoggedIn) return;
 
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`https://bookify-api-nk6g.onrender.com/reviews/${reviewId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      if (!token) return;
 
-      //remove the deleted review from state
+      await deleteUserReview(reviewId, token);
       setReviews((prevReviews) => prevReviews.filter((review) => review._id !== reviewId));
     } catch (err) {
       console.error("Error deleting review:", err);
     }
   };
 
-  //function to start editing a review
+  //start editing a review
   const startEditing = (review: Review) => {
     setEditingReviewId(review._id);
     setEditedReviewText(review.reviewText.replace(/\n/g, "<br>"));
     setOriginalReviewText(review.reviewText);
   };
-  
 
-  //function to save changed review
+  //save edited review
   const saveEditedReview = async (reviewId: string) => {
     if (!auth?.isLoggedIn) return;
-  
+
     try {
       const token = localStorage.getItem("token");
-      await axios.put(
-        `https://bookify-api-nk6g.onrender.com/reviews/${reviewId}`,
-        { reviewText: editedReviewText.replace(/<br>/g, "\n") }, //convert back to newline
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-  
-      //Update state
+      if (!token) return;
+
+      await updateUserReview(reviewId, editedReviewText.replace(/<br>/g, "\n"), token);
+
       setReviews((prevReviews) =>
         prevReviews.map((review) =>
           review._id === reviewId ? { ...review, reviewText: editedReviewText.replace(/<br>/g, "\n") } : review
         )
       );
-  
-      //close edit mode
+
       setEditingReviewId(null);
     } catch (err) {
       console.error("Error updating review:", err);
     }
   };
-  
 
-  //function to cancel editing and restore original text
+  //cancel editmode
   const cancelEditing = () => {
-    setEditedReviewText(originalReviewText); //restores original text
-    setEditingReviewId(null); //close editmode
+    setEditedReviewText(originalReviewText);
+    setEditingReviewId(null);
   };
-
 
   if (!auth?.isLoggedIn) {
     return <p>You need to be logged in to see this page.</p>;
@@ -150,7 +142,6 @@ const MyPagesPage = () => {
               <img src={books[review.bookId]?.image} alt={books[review.bookId]?.title} className="book-image" />
             )}
 
-            {/* if user is editing this review, show editmode */}
             {editingReviewId === review._id ? (
               <>
                 <p
@@ -165,11 +156,10 @@ const MyPagesPage = () => {
               </>
             ) : (
               <>
-                <p> {review.reviewText}</p>
+                <p>{review.reviewText}</p>
                 <p><strong>Rating:</strong> {review.rating} ⭐</p>
                 <p className="review-date">Posted on: {new Date(review.createdAt).toLocaleDateString()}</p>
 
-                {/* Edit and Delete-buttons */}
                 <button className="edit-button" onClick={() => startEditing(review)}>Edit</button>
                 <button className="delete-button" onClick={() => deleteReview(review._id)}>Delete</button>
               </>
