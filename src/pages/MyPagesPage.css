@@ -16,3 +16,7 @@
     background-color: rgb(175, 96, 96);
 }
 
+.cancel-button, .save-button {
+    margin-top: 10px;
+}
+
