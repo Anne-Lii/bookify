@@ -86,7 +86,7 @@ const DetailsPage = () => {
     if (!id) return;
 
     try {
-      const reviewsData = await fetchReviews(id); // Använd `fetchReviews` från `reviewService.ts`
+      const reviewsData = await fetchReviews(id); //use `fetchReviews` from `reviewService.ts`
       setReviews(reviewsData);
     } catch (error) {
       console.error("Failed to fetch reviews:", error);

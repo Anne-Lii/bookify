@@ -3,15 +3,17 @@
     margin: 0;
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     color: white;
+    box-sizing: border-box;
 }
 
-body {
-    background-color: rgb(47, 92, 88);
-}
+html, body {
+    height: 100%; /* Se till att body tar upp hela höjden */
+    margin: 0; /* Ta bort eventuell standardmarginal från webbläsaren */
+    background-color: #2f5c58;
+  }
 
 main {
     width: 100%;
-    max-width: 800px;
     margin: auto;
     text-align: center;
     padding: 0;
@@ -43,3 +45,19 @@ input {
     font-size: 18px;
     color: black;
 }
+
+
+.searchbar-container {
+    background-image: url('/src/assets/background.jpg');
+    background-size: cover; /* Gör så att bilden täcker hela ytan */
+    background-position: center center; /* Centrerar bilden */
+    background-attachment: fixed; /* Fixera bilden när du scrollar */
+    color: white; /* Textfärg */
+    padding: 50px;
+    height: 100vh; /* Sätt höjd till 100% av viewportens höjd */
+    width: 100%; /* Sätt bredd till 100% */
+    display: flex; /* För att använda flexbox */
+    flex-direction: column;
+    justify-content: center; /* Vertikal centrering av innehållet */
+}
+  
