@@ -7,8 +7,8 @@
 }
 
 html, body {
-    height: 100%; /* Se till att body tar upp hela höjden */
-    margin: 0; /* Ta bort eventuell standardmarginal från webbläsaren */
+    height: 100%;
+    margin: 0;
     background-color: #2f5c58;
   }
 

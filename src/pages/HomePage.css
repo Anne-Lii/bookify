@@ -23,6 +23,12 @@
 }
 .searchbar-container p{
     padding: 20px 0;
-
 }
+ 
+/* smaller screens */
+@media screen and (max-width: 768px) {
   
+    .searchbar-container h1 {        
+        padding: 0;
+    }
+}
