@@ -1,10 +1,10 @@
 .searchresult-main {
     width: 100%;
-    max-width: 500px;
+    max-width: 1400px;
     margin: auto;
 }
 
-.searchresult-main .back-button{
+.searchresult-main .back-button {
     display: inline-block;
     padding: 8px 0;
     font-size: 16px;
@@ -15,34 +15,96 @@
     cursor: pointer;
     width: 95%;
     max-width: 150px;
-    margin: 20px 0 0 0 ;
+    margin: 20px 0;
 }
 
 .searchResults {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
     list-style: none;
-    padding: 0 0 150px 0;
+    padding: 20px 0 150px 0;
+    justify-content: center;
+}
+
+.searchResultItem {
+    width: 100%;
+    max-width: 250px; 
+    min-height: 450px; 
+    margin: auto;
+    padding: 20px;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    box-shadow: 5px 5px 10px black;
+    transition: transform 0.2s;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.searchResults img {
+    width: 100%;
+    max-width: 150px;
+    height: 200px; 
+    object-fit: cover; 
+    margin: 10px auto;
+}
+
+/* smaller screens than 1200 px */
+@media (max-width: 1200px) {
+    .searchResults {
+        grid-template-columns: repeat(4, 1fr); 
+    }
+}
+
+/* smaller screens than 1024 px */
+@media (max-width: 1024px) {
+    .searchResults {
+        grid-template-columns: repeat(3, 1fr); 
+    }
+}
+
+/* smaller screens than 768 px */
+@media (max-width: 768px) {
+    .searchResults {
+        grid-template-columns: repeat(2, 1fr); 
+    }
+
+    .searchResultItem {
+        max-width: 90%;
+        min-height: 400px;
+    }
+
+    .searchResultItem h2 {
+        font-size: 16px; 
+    }
+
+    .searchResultItem p {
+        font-size: 12px; 
+    }
+}
+
+/* smaller screens than 480px */
+@media (max-width: 480px) {
+    .searchResults {
+        grid-template-columns: 1fr; /* En kolumn på mobiler */
+    }
+}
+
+/* Hover */
+.searchResultItem:hover {
+    transform: scale(1.02);
 }
 
 .searchResultLink {
     text-decoration: none;
+    color: white;
 }
 
-.searchResults li {
-    border-bottom: 1px solid white;
-    padding: 20px;
-    min-height: 200px;
-}
-
-.searchResults h2:hover {
+.searchResultItem h2:hover {
     text-decoration: underline;
     cursor: pointer;
 }
 
-.searchResults img {
-    width: 100px;
-    transition: transform 0.3s ease-in-out;
-}
-
-.searchResultItem:hover img {
-    transform: scale(1.1); /* zoom in 10% when hover over picture */
-}
