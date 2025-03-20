@@ -28,9 +28,9 @@ const Header = () => {
               <NavLink to="/my-pages">My pages</NavLink>
             </li>
             <li>
-              <li onClick={auth.logout} className="logout-button">
+              <span onClick={auth.logout} className="logout-link">
                 Log out
-              </li>
+              </span>
             </li>
           </>
         )}

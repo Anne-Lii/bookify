@@ -204,7 +204,11 @@ const DetailsPage = () => {
       <div className="review-container">
         <h2>Reviews</h2>
         {reviews.length === 0 ? (
-          <p>No reviews yet. Be the first to review! (You need to be logged in to leave a review)</p>
+          <p>
+            No reviews yet. Be the first to review!
+            {!auth?.isLoggedIn && <><br /><span>(You need to be logged in to leave a review)</span></>}
+          </p>
+
         ) : (
           <ul className="reviews-list">
             {reviews.map((review, index) => (

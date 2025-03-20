@@ -46,12 +46,12 @@ const SearchResultPage = () => {
   
   return (
     <div className='searchresult-main'>
-      <h1>Search result for: {query}</h1>
-
-      {/* Back to Home Button */}
-      <button className="back-button" onClick={() => navigate("/")}>
-        Go back
+       {/* Back to Home Button */}
+       <button className="back-button" onClick={() => navigate("/")}>
+      ← Go back
       </button>
+
+      <h1>Search result for: {query}</h1>
 
       {loading && <p>Loading...</p>}
       {error && <p>{error}</p>}

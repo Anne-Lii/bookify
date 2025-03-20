@@ -8,8 +8,16 @@
     border-bottom: 3px solid white;
 }
 
-.navbar a {   
+.navbar a, .logout-link {
     text-decoration: none;
+    color: white;
+    font-size: 22px;
+    padding: 10px;
+    cursor: pointer; /* Gör att den känns klickbar */
+}
+
+.navbar a:hover, .logout-link:hover {
+    text-decoration: underline;
 }
 
 .logout-button:hover {

@@ -1,0 +1,28 @@
+.searchbar-container {
+    background-image: url('/src/assets/background.jpg');
+    background-size: cover;
+    background-position: center center; 
+    background-attachment: fixed;
+    color: white;
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+
+}
+
+.background-box {
+    background-color: rgba(0, 0, 0, 0.6);
+    padding:  30px 30px 30px;
+    border-radius: 10px;
+    color: white;
+    max-width: 600px;
+    width: 95%;
+    margin: 100px auto 0 auto;
+    text-align: center;
+}
+.searchbar-container p{
+    padding: 20px 0;
+
+}
+  
