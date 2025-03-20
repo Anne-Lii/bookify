@@ -31,4 +31,8 @@
     .searchbar-container h1 {        
         padding: 0;
     }
+
+    .background-box {
+        margin: 50px auto 0 auto;
+    }
 }
