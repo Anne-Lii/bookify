@@ -1,10 +1,16 @@
 import "./Header.css";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 
 const Header = () => {
   const auth = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    auth?.logout(); 
+    navigate("/"); //navigate to startpage after logged out
+  };
 
   return (
     <header>
@@ -28,7 +34,7 @@ const Header = () => {
               <NavLink to="/my-pages">My pages</NavLink>
             </li>
             <li>
-              <span onClick={auth.logout} className="logout-link">
+              <span onClick={handleLogout} className="logout-link">
                 Log out
               </span>
             </li>
