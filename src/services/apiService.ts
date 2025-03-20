@@ -76,18 +76,19 @@ export const deleteUserReview = async (reviewId: string, token: string) => {
 };
 
 //Update a review
-export const updateUserReview = async (reviewId: string, reviewText: string, token: string) => {
-  try {
-      await axios.put(
-          `${API_URL}/reviews/${reviewId}`,
-          { reviewText },
-          { headers: { Authorization: `Bearer ${token}` } }
-      );
-  } catch (err) {
-      console.error("Error updating review:", err);
-      throw err;
-  }
-};
+export const updateUserReview = async (reviewId: string, reviewText: string, rating: number, token: string) => {
+    try {
+        await axios.put(
+            `${API_URL}/reviews/${reviewId}`,
+            { reviewText, rating }, //send review and rating
+            { headers: { Authorization: `Bearer ${token}` } }
+        );
+    } catch (err) {
+        console.error("Error updating review:", err);
+        throw err;
+    }
+  };
+  
 
 
 //USER

@@ -19,7 +19,7 @@ interface BookDetails {
 }
 
 const MyPagesPage = () => {
-  //states
+  //States
   const auth = useContext(AuthContext);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [books, setBooks] = useState<{ [key: string]: BookDetails }>({});
@@ -29,7 +29,9 @@ const MyPagesPage = () => {
   //States for inline-editing
   const [editingReviewId, setEditingReviewId] = useState<string | null>(null);
   const [editedReviewText, setEditedReviewText] = useState("");
+  const [editedRating, setEditedRating] = useState<number>(0);
   const [originalReviewText, setOriginalReviewText] = useState("");
+  const [originalRating, setOriginalRating] = useState<number>(0);
 
   useEffect(() => {
     if (!auth?.isLoggedIn) return;
@@ -42,11 +44,11 @@ const MyPagesPage = () => {
           return;
         }
 
-        //get users reviews
+        //Get user's reviews
         const userReviews = await fetchUserReviews(token);
         setReviews(userReviews);
 
-        //get book information for every review
+        //Get book information for each review
         const bookData: { [key: string]: BookDetails } = {};
         await Promise.all(
           userReviews.map(async (review: Review) => {
@@ -72,7 +74,7 @@ const MyPagesPage = () => {
     fetchReviewsAndBooks();
   }, [auth?.isLoggedIn]);
 
-  //delete a review
+  //Delete a review
   const deleteReview = async (reviewId: string) => {
     if (!auth?.isLoggedIn) return;
 
@@ -87,26 +89,33 @@ const MyPagesPage = () => {
     }
   };
 
-  //start editing a review
+  //Start edit-mode 
   const startEditing = (review: Review) => {
     setEditingReviewId(review._id);
     setEditedReviewText(review.reviewText.replace(/\n/g, "<br>"));
+    setEditedRating(review.rating);
     setOriginalReviewText(review.reviewText);
+    setOriginalRating(review.rating);
   };
 
-  //save edited review
+  //Save edited review and rating
   const saveEditedReview = async (reviewId: string) => {
     if (!auth?.isLoggedIn) return;
 
     try {
-      const token = localStorage.getItem("token");
-      if (!token) return;
+      const token = localStorage.getItem("token") ?? "";
+      if (!token) {
+        console.error("No token found, user might not be logged in.");
+        return;
+      }
 
-      await updateUserReview(reviewId, editedReviewText.replace(/<br>/g, "\n"), token);
+      await updateUserReview(reviewId, editedReviewText.replace(/<br>/g, "\n"), editedRating, token);
 
       setReviews((prevReviews) =>
         prevReviews.map((review) =>
-          review._id === reviewId ? { ...review, reviewText: editedReviewText.replace(/<br>/g, "\n") } : review
+          review._id === reviewId
+            ? { ...review, reviewText: editedReviewText.replace(/<br>/g, "\n"), rating: editedRating }
+            : review
         )
       );
 
@@ -116,9 +125,10 @@ const MyPagesPage = () => {
     }
   };
 
-  //cancel editmode
+  //Cancel editing
   const cancelEditing = () => {
     setEditedReviewText(originalReviewText);
+    setEditedRating(originalRating);
     setEditingReviewId(null);
   };
 
@@ -148,9 +158,24 @@ const MyPagesPage = () => {
                   className="editable-text"
                   contentEditable
                   suppressContentEditableWarning
-                  onBlur={(e) => setEditedReviewText(e.currentTarget.innerText.trim())} 
+                  onBlur={(e) => setEditedReviewText(e.currentTarget.innerText.trim())}
                   dangerouslySetInnerHTML={{ __html: editedReviewText }}
                 ></p>
+
+                {/* Dropdown to change rating */}
+                <div>
+                  <label><strong>Rating:</strong></label>
+                  <select
+                    value={editedRating}
+                    onChange={(e) => setEditedRating(Number(e.target.value))}
+                    className="rating-dropdown"
+                  >
+                    {[1, 2, 3, 4, 5].map((num) => (
+                      <option key={num} value={num}>{num} ⭐</option>
+                    ))}
+                  </select>
+                </div>
+
                 <button className="save-button" onClick={() => saveEditedReview(review._id)}>Save</button>
                 <button className="cancel-button" onClick={cancelEditing}>Cancel</button>
               </>

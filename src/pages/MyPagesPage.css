@@ -24,3 +24,15 @@
     margin-top: 10px;
 }
 
+.rating-dropdown {
+    width: 70px;
+    padding: 5px;
+    font-size: 16px;
+    border-radius: 5px;
+    color: black;
+    cursor: pointer;
+}
+
+.rating-dropdown option { 
+    color: black;
+}
