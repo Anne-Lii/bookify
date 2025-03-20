@@ -46,6 +46,7 @@
 
 
   /* Reviews */
+   /* Write a review button */
   .review-button {
     background-color: rgb(32, 61, 59);
     color: white;
@@ -61,6 +62,7 @@
     background-color: rgb(12, 14, 13);
   }
   
+   /* Reviewform */
   .review-form {
     display: flex;
     flex-direction: column;
@@ -77,6 +79,7 @@
     color: black;
   }
 
+   /* list reviews */
   .review-container {
     padding-top: 50px;
   }
@@ -88,9 +91,13 @@
   
   .review-item {
     padding: 10px;
-    border-radius: 5px;
+    border-bottom: 1px solid grey;
     margin-bottom: 10px;
     color: black;
+  }
+
+  .rev-text {
+    margin: 5px 0;
   }
   
   .review-date {
@@ -116,5 +123,10 @@
     background-color: rgb(175, 96, 96);
     max-width: 40px;
     margin-top: 10px;
+  }
+
+  /*Editmode*/
+  .editable-text {
+    margin: 10px 0;
   }
   

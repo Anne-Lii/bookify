@@ -256,55 +256,55 @@ const DetailsPage = () => {
 
         ) : (
           <ul className="reviews-list">
-  {reviews.map((review, index) => (
-    <li key={review._id || index} className="review-item">
-      <p><strong>{review.userId?.username || "Unknown User"}</strong></p>
+            {reviews.map((review, index) => (
+              <li key={review._id || index} className="review-item">
+                <p><strong>{review.userId?.username || "Unknown User"}</strong></p> {/* user that wrote the review */}
 
-      {editingReviewId === review._id ? (
-        <>
-          {/* Inline editable text */}
-          <p
-            className="editable-text"
-            contentEditable  /* contentEditable to make the text editable */
-            suppressContentEditableWarning
-            onBlur={(e) => setEditedReviewText(e.currentTarget.innerText.trim())} 
-            dangerouslySetInnerHTML={{ __html: editedReviewText }}
-          ></p>
+                {editingReviewId === review._id ? (
+                  <>
+                    {/* Inline editable text */}
+                    <p
+                      className="editable-text"
+                      contentEditable  /* contentEditable to make the text editable */
+                      suppressContentEditableWarning
+                      onBlur={(e) => setEditedReviewText(e.currentTarget.innerText.trim())}
+                      dangerouslySetInnerHTML={{ __html: editedReviewText }}
+                    ></p>
 
-          {/* Dropdown to change rating */}
-          <div>
-            <label><strong>Rating:</strong></label>
-            <select 
-              value={editedRating} 
-              onChange={(e) => setEditedRating(Number(e.target.value))}
-              className="rating-dropdown"
-            >
-              {[1, 2, 3, 4, 5].map((num) => (
-                <option key={num} value={num}>{num} ⭐</option>
-              ))}
-            </select>
-          </div>
+                    {/* Dropdown to change rating */}
+                    <div>
+                      <label><strong>Rating:</strong></label>
+                      <select
+                        value={editedRating}
+                        onChange={(e) => setEditedRating(Number(e.target.value))}
+                        className="rating-dropdown"
+                      >
+                        {[1, 2, 3, 4, 5].map((num) => (
+                          <option key={num} value={num}>{num} ⭐</option>
+                        ))}
+                      </select>
+                    </div>
 
-          <button className="save-button" onClick={() => saveEditedReview(review._id)}>Save</button>
-          <button className="cancel-button" onClick={cancelEditingReview}>Cancel</button>
-        </>
-      ) : (
-        <>
-          <p>{review.rating} ⭐</p>
-          <p>{review.reviewText}</p>
-          <p className="review-date">Posted on: {new Date(review.createdAt).toLocaleDateString()} </p>
+                    <button className="save-button" onClick={() => saveEditedReview(review._id)}>Save</button>
+                    <button className="cancel-button" onClick={cancelEditingReview}>Cancel</button>
+                  </>
+                ) : (
+                  <>
+                    <p>{review.rating} ⭐</p>
+                    <p className='rev-text'>{review.reviewText}</p>{/* review text */}
+                    <p className="review-date">Posted on: {new Date(review.createdAt).toLocaleDateString()} </p>
 
-          {auth?.user?.username === review.userId?.username && (
-            <>
-              <button className="edit-button" onClick={() => startEditingReview(review)}>Edit</button>
-              <button className="delete-button" onClick={() => handleDeleteReview(review._id)}>X</button>
-            </>
-          )}
-        </>
-      )}
-    </li>
-  ))}
-</ul>
+                    {auth?.user?.username === review.userId?.username && (
+                      <>
+                        <button className="edit-button" onClick={() => startEditingReview(review)}>Edit</button>
+                        <button className="delete-button" onClick={() => handleDeleteReview(review._id)}>X</button>
+                      </>
+                    )}
+                  </>
+                )}
+              </li>
+            ))}
+          </ul>
 
         )}
       </div>
