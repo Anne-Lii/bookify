@@ -4,6 +4,10 @@
     margin: auto;
 }
 
+.container-myReviews ul {
+    list-style: none;
+}
+
 .container-myReviews li {
     border-bottom: 1px solid grey;
 }
