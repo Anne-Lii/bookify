@@ -2,6 +2,8 @@ import "./Header.css";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
+import logo from "../assets/logo.png";
+
 
 const Header = () => {
   const auth = useContext(AuthContext);
@@ -14,6 +16,7 @@ const Header = () => {
 
   return (
     <header>
+      <img src={logo} alt="logotype" className="logo" />
       <ul className="navbar">
         <li>
           <NavLink to="/">Home</NavLink>
