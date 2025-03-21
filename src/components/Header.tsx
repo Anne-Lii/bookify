@@ -10,13 +10,15 @@ const Header = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    auth?.logout(); 
+    auth?.logout();
     navigate("/"); //navigate to startpage after logged out
   };
 
   return (
     <header>
-      <img src={logo} alt="logotype" className="logo" />
+      <NavLink to="/">
+        <img src={logo} alt="logotype" className="logo" />
+      </NavLink>
       <ul className="navbar">
         <li>
           <NavLink to="/">Home</NavLink>
