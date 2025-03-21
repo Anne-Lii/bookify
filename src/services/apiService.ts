@@ -52,7 +52,7 @@ export const deleteReview = async (reviewId: string, token: string) => {
 //Fetch user reviews
 export const fetchUserReviews = async (token: string) => {
   try {
-    console.log("Sending token:", token);//DEBUG!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
       const response = await axios.get(`${API_URL}/reviews/user`, {
           headers: { Authorization: `Bearer ${token}` },
       });
