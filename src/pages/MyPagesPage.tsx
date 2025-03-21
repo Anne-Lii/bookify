@@ -62,7 +62,7 @@ const MyPagesPage = () => {
                   ? {
                       title: bookInfo.volumeInfo.title,
                       authors: bookInfo.volumeInfo.authors,
-                      image: bookInfo.volumeInfo.imageLinks?.thumbnail,
+                      image: bookInfo.volumeInfo.imageLinks?.thumbnail?.replace("http://", "https://"),
                     }
                   : { title: "Book info unavailable" };
               } catch (error) {
