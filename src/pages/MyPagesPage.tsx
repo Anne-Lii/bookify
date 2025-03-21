@@ -43,33 +43,45 @@ const MyPagesPage = () => {
           setError("Unauthorized");
           return;
         }
-
-        //Get user's reviews
+    
         const userReviews = await fetchUserReviews(token);
+      
         setReviews(userReviews);
-
-        //Get book information for each review
+    
         const bookData: { [key: string]: BookDetails } = {};
+    
         await Promise.all(
           userReviews.map(async (review: Review) => {
-            if (!bookData[review.bookId]) {
-              const bookInfo = await getBookDetails(review.bookId);
-              bookData[review.bookId] = {
-                title: bookInfo.volumeInfo.title,
-                authors: bookInfo.volumeInfo.authors,
-                image: bookInfo.volumeInfo.imageLinks?.thumbnail,
-              };
+            const bookId = review.bookId;
+    
+            if (!bookData[bookId]) {
+              try {
+                const bookInfo = await getBookDetails(bookId);
+    
+                bookData[bookId] = bookInfo?.volumeInfo?.title
+                  ? {
+                      title: bookInfo.volumeInfo.title,
+                      authors: bookInfo.volumeInfo.authors,
+                      image: bookInfo.volumeInfo.imageLinks?.thumbnail,
+                    }
+                  : { title: "Book info unavailable" };
+              } catch (error) {
+                console.warn(`Book info could not be fetched for ${bookId}`, error);
+                bookData[bookId] = { title: "Book info unavailable" };
+              }
             }
           })
         );
-
+    
         setBooks(bookData);
       } catch (err) {
-        setError("You have no reviews yet.");
+        console.error("Could not fetch user reviews:", err);
+        setError("Something went wrong while fetching your reviews.");
       } finally {
         setLoading(false);
       }
     };
+    
 
     fetchReviewsAndBooks();
   }, [auth?.isLoggedIn]);

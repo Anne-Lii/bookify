@@ -3,7 +3,7 @@ import { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getBookDetails } from "../services/googleBooksApi";
 import { AuthContext } from '../context/AuthContext';
-import { fetchReviews, submitReview, deleteReview } from "../services/apiService";
+import { fetchReviews, submitReview, deleteReview, updateUserReview } from "../services/apiService";
 
 interface Book {
   volumeInfo: {
@@ -116,7 +116,7 @@ const DetailsPage = () => {
         return;
       }
 
-      await submitReview(reviewId, editedReviewText.replace(/<br>/g, "\n"), editedRating, token);
+      await updateUserReview(reviewId, editedReviewText.replace(/<br>/g, "\n"), editedRating, token);
 
       //update reviews locally
       setReviews((prevReviews) =>
