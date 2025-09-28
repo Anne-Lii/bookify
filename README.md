@@ -1,75 +1,62 @@
-# **Bookify**
-Anne-Lii Hansen 
-anha2324@student.miun.se
+# Bookify – Frontend
+Frontend project for **Bookify**, developed as part of the course **Advanced Frontend Development** (Mid Sweden University, 2025).  
 
-Bookify is a React-based web application that allows users to search for books via the Google Books API, write reviews, and manage their own book reviews. The frontend is built with TypeScript and communicates with a backend API developed with Hapi.js and the data is stored in a MongoDb database.
+Developed by **Anne-Lii Hansen**  
 
+---
 
-## **FRONTEND**
+## About
+Bookify is a React-based web application that allows users to search for books via the **Google Books API**, write reviews, and manage their own content.  
+The frontend is built with **TypeScript** and communicates with a backend API developed using **Hapi.js**, with data stored in **MongoDB**.  
 
-### **Features**
-* Search for books using the Google Books API  
-* View detailed book information  
-* Register and log in with JWT authentication  
-* Write book reviews  
-* Rate a book
-* Edit and delete your own reviews  
-* View a list of all reviews written by logged in user
+---
 
-### **Technologies Used**
-#### **Frontend**
-- **React** with TypeScript  
-- **React Router** for navigation  
-- **Axios** for API requests  
-- **Context API** for state management  
-- **CSS Modules** for styling  
+## Tech Stack
+**Frontend**
+- React (TypeScript)  
+- React Router (navigation)  
+- Axios (API requests)  
+- Context API (state management)  
+- CSS Modules (styling)  
 
-#### **Backend**
-- **Hapi.js** (Node.js framework)  
-- **MongoDB** (Database)  
-- **JWT authentication** for user login  
-- **Google Books API** integration  
+**Backend**
+- Node.js with Hapi.js  
+- MongoDB  
+- JWT authentication  
+- Google Books API integration  
 
-###  **Installation & Setup**
-This project is version-controlled using Git. Repository is public on GitHub:
-https://github.com/Anne-Lii/bookify.git 
+---
 
-#### **1. Clone the project**
-```sh
+## Features
+- Search for books using the Google Books API  
+- View detailed book information  
+- Register and log in with JWT authentication  
+- Write, edit, and delete your own book reviews  
+- Rate books  
+- View all reviews written by the logged-in user  
+- Secure and validated forms with error handling  
+
+---
+
+## Installation & Setup
+Clone the repository and install dependencies:  
+```bash
 git clone https://github.com/Anne-Lii/bookify.git
 cd bookify
-```
-
-#### **2. Install dependencies**
-```sh
 npm install
-```
-
-#### **3. Start server**
-```sh
 npm run dev
 ```
 
+## Backend API
 
-## **BACKEND**
+The frontend communicates with a backend API built with Hapi.js. It is hosted on Render: https://bookify-api-nk6g.onrender.com/
 
-The frontend communicates with a backend API built with Hapi.js.
-It is hosted on Render:
-```sh
-https://bookify-api-nk6g.onrender.com 
-```
+Example Endpoints
 
-### **API endpoints**
-
-POST	  /register:	            Create a new account
-POST	  /login:	                Login and get a JWT
-GET	    /reviews/book/:bookId:	Get reviews for a book
-POST	  /reviews:	              Write a review (authentication is needed)
-PUT	    /reviews/:reviewId:	    Update a review (authentication is needed)
-DELETE	/reviews/:reviewId:	    Delete a review (authentication is needed)
-GET	    /reviews/user:	        Get all the logged in users reviews
-
-### Error Handling
-* Form validation ensures that users enter valid data when registering and submitting reviews.
-* API error handling provides clear messages if a request fails.
-* JWT authentication errors return proper feedback if login fails.
+- POST /register – Create a new account
+- POST /login – Login and receive a JWT
+- GET /reviews/book/:bookId – Get reviews for a specific book
+- POST /reviews – Write a review (JWT required)
+- PUT /reviews/:reviewId – Update a review (JWT required)
+- DELETE /reviews/:reviewId – Delete a review (JWT required)
+- GET /reviews/user – Get all reviews from the logged-in user
